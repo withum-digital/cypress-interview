@@ -9,13 +9,29 @@
 // Click on News and Verify if user is navigated to this URL - News - Mojeek
 // In the Search text box, Input - How can we contribute to a greener planet?
 // To look out for this link, across all the pages from search result - https://earth.org/6-ways-to-go-greener-in-food-production/
-
+require('@cypress/xpath');
 describe('Mojeek Navigation and Search', () => {
-  it('Should navigate to the homepage', () => {});
+  it('Should navigate to the homepage', () => {
+        cy.visit("https://www.mojeek.com/")
 
-  it('Should navigate to the Images section', () => {});
+        cy.get("ul[class='pre-nav']>li:nth-child(2)>a").should('be.visible').click();
 
-  it('Should navigate to the News section', () => {});
+        cy.url().should('eq','https://www.mojeek.com/images')
 
-  it('Should perform a search and verify presence of specific link', () => {});
+        cy.get("ul[class='pre-nav']>li:nth-child(3)>a").should('be.visible').click()
+        cy.url().should('eq','https://www.mojeek.com/news')
+
+        cy.get("form[name='sf1']>input[name='q']").should('be.visible').type('How can we contribute to a greener planet?')
+        cy.get(".serp-grid left-aligned").within(() => {
+          cy.get("a").each(page => {
+          let URL  = page.prop('href')
+                if(URL==='https://earth.org/6-ways-to-go-greener-in-food-production/')
+                {
+                    expect(URL).to.be.equal('https://earth.org/6-ways-to-go-greener-in-food-production/')
+                }
+            })
+          });
+  });
+
+ 
 });
