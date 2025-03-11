@@ -43,4 +43,27 @@ describe('Mojeek Navigation and Search', () => {
         expect(newURL.text()).to.include('Planet');
       });
   });
+
+  it('Should search for a specific URL and count its occurrences', () => {
+    cy.get('.js-search-input').type('How can we contribute to a greener planet?{enter}');
+
+    cy.get('.r1 > h2 > .title')
+      .should('be.visible')
+      .then((newURL) => {
+        cy.log(`Captured URL ${newURL.text()} `);
+        expect(newURL.text()).to.include('Planet');
+      });
+
+    cy.get('body > div.large-footer > div.container.serp-results > div.result-col > div.results > ul')
+      .should('be.visible')
+      .within(() => {
+        cy.get(`a[title="https://www.bionomicfuel.com/top-ways-we-can-contribute-to-a-greener-planet/"]`)
+          .should('exist')
+          .then(($link) => {
+            const foundURL = $link.attr('title');
+            cy.log(`Found URL with title: ${foundURL}`);
+            expect(foundURL).to.equal('https://www.bionomicfuel.com/top-ways-we-can-contribute-to-a-greener-planet/');
+          });
+      });
+  });
 });
