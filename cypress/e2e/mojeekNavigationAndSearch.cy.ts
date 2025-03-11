@@ -11,11 +11,36 @@
 // To look out for this link, across all the pages from search result - https://earth.org/6-ways-to-go-greener-in-food-production/
 
 describe('Mojeek Navigation and Search', () => {
-  it('Should navigate to the homepage', () => {});
+  beforeEach(() => {
+    cy.visit('https://www.mojeek.com/');
+  });
 
-  it('Should navigate to the Images section', () => {});
+  it('Should navigate to the homepage', () => {
+    cy.url().should('eq', 'https://www.mojeek.com/');
+    cy.get('.home').should('be.visible');
+  });
 
-  it('Should navigate to the News section', () => {});
+  it('Should navigate to the Images section', () => {
+    cy.get('.pre-nav > :nth-child(2) > a').should('have.text', 'Images').click();
 
-  it('Should perform a search and verify presence of specific link', () => {});
+    cy.url().should('include', '/images');
+  });
+
+  it('Should navigate to the News section', () => {
+    cy.get('.pre-nav > :nth-child(3) > a').should('have.text', 'News').click();
+
+    cy.url().should('include', '/news');
+    cy.get(':nth-child(1) > .primary-story > article > .img-cnt > a > img').should('exist');
+  });
+
+  it('Should perform a search and verify presence of specific link', () => {
+    cy.get('.js-search-input').type('How can we contribute to a greener planet?{enter}');
+
+    cy.get('.r1 > h2 > .title')
+      .should('be.visible')
+      .then((newURL) => {
+        cy.log(`Captured URL ${newURL.text()} `);
+        expect(newURL.text()).to.include('Planet');
+      });
+  });
 });
